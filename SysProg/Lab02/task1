@@ -1,0 +1,11 @@
+; A=A-B-M+1h
+; 6B 4C 0F
+
+MVI A, 6Bh
+MVI B, 4Ch
+LXI H, 0900h
+MVI M, 0Fh
+
+SUB B
+SUB M
+ADI 1h

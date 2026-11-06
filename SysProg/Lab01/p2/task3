@@ -1,0 +1,3 @@
+MVI H, 0A9h
+MOV D, H
+MOV E, D

@@ -1,0 +1,82 @@
+org 0x0800
+
+; Задержка
+lxi D, 0xFFFF
+
+MAIN:
+    mvi A, 0b10010010; 1 4 7
+    call PRINTA
+    call PRINTLN
+    call DELAY
+
+    mvi A, 0b01001001 ; 2 5 8
+    call PRINTA
+    call PRINTLN
+    call DELAY
+
+    mvi A, 0b00100100 ; 3 6
+    call PRINTA
+    call PRINTLN
+    call DELAY
+
+    jmp MAIN
+
+;# Подпрограмма задержки
+; Задержка берётся из DE
+; BC перезаписывается
+; Задержка: DE*24+27 тактов 
+; min: 41 такт
+; max: 1572891 тактов ~ 786.5 ms
+DELAY:
+    mov B, D                ; 5t
+    mov C, E                ; 5t
+    DELAYLOOP:
+        dcx B               ; 5t
+        ; B | C, получаем 0 только если оба 0 
+        mov A, B            ; 5t
+        ora C               ; 4t
+        jnz DELAYLOOP       ; 10t 
+                            ; 7t (за jnz в конце )
+    ret                     ; 10t
+
+;# Подпрограмма вывода A побитово (аналог светодиодов)
+PRINTA:
+    mov B, A
+    mvi C, 8
+    PRINTLOOP:
+        ani 0x80 ; первый байт
+        jz PRINT_ZERO
+        ; Зажжёный светодиод
+            mvi A, 0x20 ; горит
+            out 0x00
+            mvi A, '@' ; @
+            out 0x00
+            jmp CONTINUE
+        ; Потухший светодиод
+        PRINT_ZERO: 
+            mvi A, 0x00 ; не горит
+            out 0x00
+            mvi A, 'O' ; O
+            out 0x00
+
+        CONTINUE:
+        ; Сдвигаем
+        mov A, B
+        rlc
+        mov B, A
+
+        ; повтор 8 раз
+        dcr C
+        jnz PRINTLOOP
+    ret
+
+PRINTLN:
+    mvi C, 56
+    PRINTLNLOOP:
+        mvi A, 0x00
+        out 0x00
+        mvi A, '-'
+        out 0x00
+        dcr C
+        jnz PRINTLNLOOP
+    ret

@@ -1,0 +1,32 @@
+ORG 0x0800
+
+LXI H, 0
+LXI D, 12
+MVI A, 34
+
+; HL = DE*A
+LOOP:
+    ORA A ; A=A, CY=0 + обновляем Z
+    JZ BREAK
+    RAR ; сдвинули вправо, младший бит в CY
+    JNC CONTINUE
+    DAD D ; HL += DE
+CONTINUE:
+    ORA A ; CY=0
+    ; Сдвигаем DE влево
+    MOV B, A ; сохраняем A
+
+    MOV A, E
+    RAL
+    MOV E, A
+
+    MOV A, D
+    RAL
+    MOV D, A
+
+    MOV A, B ; восстанавливаем A
+    
+    JMP LOOP
+BREAK:
+    HLT
+

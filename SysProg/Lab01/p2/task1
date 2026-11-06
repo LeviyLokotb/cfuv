@@ -1,0 +1,5 @@
+MVI A, 0FFh
+MVI E, 0EEh
+MVI L, 0A4h
+MVI D, 033h
+MVI C, 0CCh

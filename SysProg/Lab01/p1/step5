@@ -1,0 +1,7 @@
+MVI A, 0FFh
+MOV B, A
+MOV C, B
+MOV D, C
+MOV E, D
+MOV H, E
+MOV L, H

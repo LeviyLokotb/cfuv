@@ -1,0 +1,46 @@
+; Адрес 1 числа: 8310. Число: D46618
+; Адрес 2 числа: 8200. Число: 341198
+
+ORG 0x0800
+
+;# Загрузка
+LXI SP, 0x8FFF
+CALL LOAD_DATA
+
+; Загружаем параметры
+MVI B, 3
+LXI H, 0x8310
+LXI D, 0x8200
+
+XRA A ; обнуляем A и CY
+LOOP:
+    LDAX D
+
+    ; Единственное место где меняется CY
+    ADC M
+
+    ; Запись обратно в число по адресу HL
+    MOV M, A
+    
+    INX H
+    INX D
+    DCR B
+    JNZ LOOP
+HLT
+
+LOAD_DATA:
+    LXI H, 0x8310
+    MVI M, 0x18
+    INX H
+    MVI M, 0x66
+    INX H
+    MVI M, 0xD4
+
+    LXI H, 0x8200
+    MVI M, 0x98
+    INX H
+    MVI M, 0x11
+    INX H
+    MVI M, 0x34
+
+    RET

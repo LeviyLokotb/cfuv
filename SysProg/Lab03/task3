@@ -1,0 +1,15 @@
+; Сравнение регистра A с регистром, ячейкой, числом
+; A = 0x07
+; C = 0x03 (gt)
+; M = 0x0B (lt)
+; K = 0x07 (eq)
+
+MVI A, 0x07
+MVI C, 0x03
+LXI H, 0x0916
+MVI M, 0x0B
+
+CMP C
+CMP M
+CPI 0x07
+HLT

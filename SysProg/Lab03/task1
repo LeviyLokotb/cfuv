@@ -1,0 +1,25 @@
+; A = M | H&L + (0x27&B)
+; M=5 H=50 L=4E B=BA
+
+LXI H, 0x0900
+MVI M, 0x05   ; M
+LXI H, 0x504E ; H, L
+MVI B, 0xBA   ; B
+
+; B = B & 0x27
+MOV A, B
+ANI 0x27
+MOV B, A
+
+; A = H & L
+MOV A, H
+ANA L
+
+; A = A+B (приоритет XOR выше чем OR)
+XRA B
+
+; A = A | M
+LXI H, 0x0900
+ORA M
+
+HLT

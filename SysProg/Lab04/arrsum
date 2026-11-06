@@ -1,0 +1,48 @@
+; Ячейка в которой хранится длина массива: 0x8100
+; Ячейка с первым элементом массива: 0x832D
+ORG 0x0800
+
+;# Настройка
+LXI SP, 0x8FFF
+
+;# Загрузка данных
+; Длина
+LXI H, 0x8100
+MVI M, 4
+
+; Массив
+LXI H, 0x832D
+MVI A, 0xA4
+CALL PUT
+MVI A, 0x1F
+CALL PUT
+MVI A, 0x23
+CALL PUT
+MVI A, 0x0D
+CALL PUT
+
+;# Суммируем элементы массива
+; HL -- адрес первого элемента
+; B -- длина массива
+; Результат в A
+
+LDA 0x8100
+MOV B, A
+
+LXI H, 0x832D
+
+SUB A
+
+LOOP:
+    ADD M
+    INX H
+    DCR B
+    JNZ LOOP
+HLT
+
+;# Подпрограммы
+; Загружает число из A в массив
+PUT:
+    MOV M, A
+    INX H
+    RET
